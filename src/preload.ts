@@ -2,14 +2,12 @@ import { Readable } from 'stream';
 import * as fs from 'promise-fs';
 import * as electron from 'electron';
 
+const { contextBridge } = electron
+
 const { ipcRenderer } = electron;
 
 const EXPORT_FILE_NAME = 'export.txt';
 
-enum RecordType {
-    SUCCESS = "success",
-    FAILED = "failed"
-}
 const responseToReadable = (fileStream: any) => {
     const reader = fileStream.getReader();
     const rs = new Readable();
@@ -99,8 +97,7 @@ const setExportRecord = async (dir: string, data: string) => {
     await fs.writeFile(filepath, data);
 };
 
-const windowObject: any = window;
-windowObject['ElectronAPIs'] = {
+const ElectronAPIs = {
     checkExistsAndCreateCollectionDir,
     saveStreamToDisk,
     saveFileToDisk,
@@ -114,4 +111,5 @@ windowObject['ElectronAPIs'] = {
     registerRetryFailedExportListener,
     getExportRecord,
     setExportRecord
-};
+}
+contextBridge.exposeInMainWorld('ElectronAPIs', ElectronAPIs)
