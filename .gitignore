@@ -1,8 +1,1 @@
-node_modules
-app
-dist
-.vscode
-buildingSteps.md
 .DS_Store
-.idea/
-build/.DS_Store
